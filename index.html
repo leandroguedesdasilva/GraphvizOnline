@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Graphviz Online</title>
+    <title>Veja a arvore</title>
     <style type="text/css" media="screen">
         body {
             overflow: hidden;
@@ -15,7 +15,7 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            right: 50%;
+            right: 80%;
             left: 0;
         }
 
@@ -25,7 +25,7 @@
             top: 50px;
             bottom: 0;
             right: 0;
-            left: 50%;
+            left: 20%;
             overflow: scroll;
         }
 
@@ -57,37 +57,44 @@
         }
 
         #status {
-            width: 100%;
+            margin: 0;
             position: fixed;
-            bottom: 0;
-            display: block;
-            color: #FFF;
-            z-index: 999;
+            left: 50%;
+            color:yellowgreen;
+            background-color:black;
+            width: 100%;
+            font-size: 15px;
         }
 
         #review svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+    
+            top:0px; 
+            left:0px;
+            width: 10%;
+            height: 10%;
+  
         }
 
         #review #text {
-            font-size: 12px;
+            font-size: 1px;
             font-family: monaco, courier, monospace;
             white-space: pre;
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 0%;
+            height: 0%;
             overflow: auto;
         }
 
         #review img {
             display: block;
             margin: 0 auto;
+            position:relative; 
+            top:0px; 
+            left:0px;
+           
+
         }
 
         #review.working svg, #output.error svg,
@@ -114,55 +121,29 @@
     </style>
 </head>
 <body>
-<pre id="editor">digraph G {
 
-  subgraph cluster_0 {
-    style=filled;
-    color=lightgrey;
-    node [style=filled,color=white];
-    a0 -> a1 -> a2 -> a3;
-    label = "process #1";
-  }
+<script   src="https://code.jquery.com/jquery-2.2.4.min.js"integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
 
-  subgraph cluster_1 {
-    node [style=filled];
-    b0 -> b1 -> b2 -> b3;
-    label = "process #2";
-    color=blue
-  }
-  start -> a0;
-  start -> b0;
-  a1 -> b3;
-  b2 -> a3;
-  a3 -> a0;
-  a3 -> end;
-  b3 -> end;
 
-  start [shape=Mdiamond];
-  end [shape=Msquare];
-}</pre>
-<div id="options">
+
+<pre id="editor"></pre>
+<div id="review">
+    <div id="error"></div>
+</div>
+<script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<div id="options" hidden>
     <label id="engine">
         Engine:
         <select>
-            <option>circo</option>
             <option selected="">dot</option>
-            <option>fdp</option>
-            <option>neato</option>
-            <option>osage</option>
-            <option>twopi</option>
         </select>
     </label>
 
     <label id="format">
         Format:
         <select>
-            <option selected="">svg</option>
-            <option>png-image-element</option>
-            <option>json</option>
-            <option>xdot</option>
-            <option>plain</option>
-            <option>ps</option>
+            <option selected="">png-image-element</option>
         </select>
     </label>
 
@@ -177,17 +158,9 @@
     <input type="input" value="" id="shareurl">
 
 </div>
-<div id="review">
-    <div id="error"></div>
-</div>
-<div id="status"></div>
-<div class="github-fork-ribbon-wrapper right">
-    <div class="github-fork-ribbon">
-        <a href="https://github.com/dreampuf/graphvizonline">Fork me on GitHub</a>
-    </div>
-</div>
 
-<script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<div id="status"></div>
+
 <script>
   (function (document) {
     //http://stackoverflow.com/a/10372280/398634
@@ -317,7 +290,7 @@
           worker.dispatchEvent(event);
           return
         }
-        show_status("done", 500);
+        show_status("Arvore "+bc_nomeServico+ " pronta", 500);
         reviewer.classList.remove("working");
         reviewer.classList.remove("error");
         updateOutput(e.data.result);
@@ -326,7 +299,7 @@
         show_error(e.detail);
       }, false);
 
-      show_status("rendering...");
+      show_status("Reinderizando arvore "+bc_nomeServico+"...");
       var params = {
         "src": editor.getSession().getDocument().getValue(),
         "id": new Date().toJSON(),
@@ -357,17 +330,18 @@
       if (svg) {
         reviewer.removeChild(svg);
       }
+      var 
+      a = reviewer.querySelector("a");
+      if (a) {
+        reviewer.removeChild(a);
+      }
 
       var text = reviewer.querySelector("#text");
       if (text) {
         reviewer.removeChild(text);
       }
 
-      var a = reviewer.querySelector("a");
-      if (a) {
-        reviewer.removeChild(a);
-      }
-
+ 
       if (!result) {
         return;
       }
@@ -385,11 +359,11 @@
             show_error(err)
             return
           }
-          image.setAttribute("title", "Click to save it");
+          image.setAttribute("title", "Clique aqui para salvar a imgaem");
           var a = document.createElement("a");
-          a.href = image.src;
-          a.target = "_blank";
-          a.download = "graphviz.png";
+         // a.href = image.src;
+         // a.target = "_blank";
+         // a.download = "graphviz.png";
           a.appendChild(image);
           reviewer.appendChild(a);
         })
@@ -400,14 +374,14 @@
         reviewer.appendChild(text);
       }
 
-      updateState()
+      //updateState()
     }
 
     editor.setTheme("ace/theme/twilight");
     editor.getSession().setMode("ace/mode/dot");
     editor.getSession().on("change", function () {
       clearTimeout(lastHD);
-      lastHD = setTimeout(renderGraph, 1500);
+      lastHD = setTimeout(renderGraph, 240000);
     });
 
     window.onpopstate = function(event) {
@@ -421,11 +395,32 @@
     rawEl.addEventListener("change", renderGraph);
     share.addEventListener("click", copyShareURL);
 
-
+  
     /* come from sharing */
     if (location.hash.length > 1) {
       editor.getSession().setValue(decodeURIComponent(location.hash.substring(1)));
     }
+    var bc_nomeServico = ""
+    $(function() 
+    {
+       bc_nomeServico = location.hash.substring(1)
+       var TXT_URL = 'http://vejaaarvore.bcnet.bcb.gov.br/'+bc_nomeServico;
+       //var TXT_URL = $("#input-url").val();
+    
+        $.ajax
+        (
+          {
+          url : TXT_URL,
+          dataType: "text",
+          success : function (data) 
+          {
+            
+            editor.getSession().setValue(decodeURIComponent(data));
+            renderGraph()
+          }
+        }
+      );
+    });
 
     /* Init */
     if (editor.getValue()) {

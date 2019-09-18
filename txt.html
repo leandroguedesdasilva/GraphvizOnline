@@ -1,0 +1,33 @@
+<html>
+<head>
+<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#palco > div").hide();
+	$("#sel-sexo").change(function(){
+		$("#palco > div").hide();
+		$( '#'+$( this ).val() ).show('fast');
+	});
+	$("input[name='rd-sexo']").click(function(){
+		$("#palco > div").hide();
+		$( '#'+$( this ).val() ).show('fast');	
+	});
+});
+</script>
+</head>
+<body>
+	
+	<select name="sel-sexo" id="sel-sexo">
+		<option value="">--</option>
+		<option value="Feminino">Feminino</option>
+		<option value="Masculino">Masculino</option>
+	</select>
+	<label><input type="radio" name="rd-sexo" value="Feminino" />Feminino</label>
+	<label><input type="radio" name="rd-sexo" value="Masculino" />Masculino</label>
+	
+	<div id="palco">
+		<div id="Masculino">Seu sexo é Masculino!</div>
+		<div id="Feminino">Seu sexo é Feminino!</div>
+	</div>
+</body>
+</html>
